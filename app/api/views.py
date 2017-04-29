@@ -20,9 +20,18 @@ class UserViewSet(model_set):
     serializer_class = UserListSerializer
 
 
-    @list_route(methods=['post'])
+    @list_route(methods=['post','get'])
     def user_signup(self, request):
         serializer = UserSignupSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-        return Response(serializer.validated_data)
+            serializer = serializer.validated_data
+        else:
+            serializer = serializer.errors
+
+        return Response(serializer)
+
+
+    @list_route(methods=['post'])
+    def user_login(self, request):
+        pass
