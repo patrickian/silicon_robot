@@ -1,13 +1,17 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 
+from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.viewsets import (
     ModelViewSet as model_set
 )
 
-from api.serializers import UserListSerializer
+from api.serializers import (
+    UserListSerializer,
+    UserSignupSerializer,
+)
 
 
 class UserViewSet(model_set):
@@ -16,8 +20,9 @@ class UserViewSet(model_set):
     serializer_class = UserListSerializer
 
 
-    @list_route()
-    def user_list(self):
-        users = User.objects.all()
-        serializer = self.get_serializer(users, many=True)
-        return Response(serializer.data)
+    @list_route(methods=['post'])
+    def user_signup(self, request):
+        serializer = UserSignupSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.validated_data)
