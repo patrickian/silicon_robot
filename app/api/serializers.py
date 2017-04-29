@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 
+from rest_framework.validators import UniqueValidator
+
 from rest_framework import serializers
 
 
@@ -19,12 +21,12 @@ class UserSignupSerializer(serializers.ModelSerializer):
 
     password = serializers.CharField(
         max_length=512,
-        write_only=True,
         required=True
     )
     email = serializers.EmailField(
-        max_length=30,
+        max_length=128,
         required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
     )
 
     class Meta:
@@ -44,3 +46,19 @@ class UserSignupSerializer(serializers.ModelSerializer):
             first_name=validated_data.get('first_name') or '',
             last_name=validated_data.get('last_name') or ''
         )
+
+
+
+class UserLoginSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(
+        max_length=128,
+        required=True,
+    )
+    password = serializers.CharField(
+        max_length=512,
+        required=True
+    )
+
+    class Meta:
+        model = User
+        fields = ('email', 'password')
