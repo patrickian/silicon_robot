@@ -36,7 +36,7 @@ try:
     with open(os.path.join(CONFIG_DIR, 'keys.json'), 'r') as fh:
         KEYS = json.loads(fh.read())
         fh.close()
-except Exception as e:
+except Exception as err:
     raise err
 
 # Application definition
@@ -127,7 +127,7 @@ EMAIL_PORT = 587
 
 EMAIL_USE_TLS = True
 
-DEFAULT_FROM_EMAIL  = KEYS.get('EMAIL_HOST')
+DEFAULT_FROM_EMAIL = KEYS.get('EMAIL_HOST')
 
 # OAUTH2
 # http://django-oauth-toolkit.readthedocs.io/en/latest/settings.html
@@ -136,10 +136,8 @@ OAUTH2_PROVIDER = {
         'read': 'Read scope',
         'write': 'Write scope',
     },
-
     'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
     'ACCESS_TOKEN_EXPIRE_SECONDS': 240000,
-
 }
 
 # Password validation
@@ -179,4 +177,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
-

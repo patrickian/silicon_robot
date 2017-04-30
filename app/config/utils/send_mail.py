@@ -1,15 +1,20 @@
 from django.core.mail import send_mail
-from django.contrib.auth.models import User
 
 from config import settings
 
 
 def send_activation_mail(token):
-    activation_link = ('http://localhost:8000/' +
-        'api/users/{}/activate?temp={}'.format
-        (token.user.id, token.token)
+    '''
+        Function to send activation email to user
+        param: AccessToken object
+    '''
+
+    activation_link = (
+            'http://localhost:8000/' +
+            'api/users/{}/activate?temp={}'.format(
+                token.user.id, token.token)
     )
-    
+
     html_msg = '''
         <h1> Welcome {} </h1>
         <br>

@@ -49,7 +49,6 @@ class UserSignupSerializer(serializers.ModelSerializer):
         )
 
 
-
 class UserLoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         max_length=128,
