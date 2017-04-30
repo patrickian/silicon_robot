@@ -55,7 +55,7 @@ class UserViewSet(OAuthHandler, model_set):
 
     @list_route(methods=['post'])
     def user_login(self, request):
-        ''' ENDPOINT : /api/users/user_signup/
+        ''' ENDPOINT : /api/users/user_login/
         '''
         serializer = UserLoginSerializer(data=request.data)
         if serializer.is_valid():
