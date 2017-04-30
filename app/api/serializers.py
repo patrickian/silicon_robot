@@ -44,7 +44,8 @@ class UserSignupSerializer(serializers.ModelSerializer):
             username=validated_data['email'],
             password=validated_data['password'],
             first_name=validated_data.get('first_name') or '',
-            last_name=validated_data.get('last_name') or ''
+            last_name=validated_data.get('last_name') or '',
+            is_active=False
         )
 
 

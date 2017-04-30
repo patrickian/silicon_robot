@@ -9,6 +9,7 @@ from rest_framework.viewsets import (
     ModelViewSet as model_set
 )
 
+from config.utils.send_mail import send_activation_mail
 from api.serializers import (
     UserListSerializer,
     UserSignupSerializer,
@@ -29,9 +30,11 @@ class UserViewSet(model_set):
     def user_signup(self, request):
         serializer = UserSignupSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            user = serializer.save()
             r_text = serializer.validated_data
             r_status = status.HTTP_200_OK
+
+            send_activation_mail(user)
         else:
             r_text = serializer.errors
             r_status = status.HTTP_400_BAD_REQUEST
@@ -70,11 +73,21 @@ class UserViewSet(model_set):
                 request.data['password']
             )
             request.user.save()
-            r_text = 'Successfully changed password.'
+            r_text = 'OK'
             r_status = status.HTTP_200_OK
         else:
             r_text = serializer.errors 
             r_status = status.HTTP_400_BAD_REQUEST
 
+
+        return Response(r_text, status=r_status)
+
+    @detail_route(methods=['get'])
+    def activate(self, request, pk=None):
+        user = User.objects.get(id=pk)
+        user.is_active = True
+        user.save()
+        r_text = 'OK'
+        r_status = status.HTTP_200_OK
 
         return Response(r_text, status=r_status)

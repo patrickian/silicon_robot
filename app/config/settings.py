@@ -9,8 +9,8 @@ https://docs.djangoproject.com/en/1.9/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
-
 import os
+import json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,6 +27,17 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Accessing Keys.json
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONFIG_DIR = os.path.join(BASE_DIR, 'config')
+KEYS = {}
+
+try:
+    with open(os.path.join(CONFIG_DIR, 'keys.json'), 'r') as fh:
+        KEYS = json.loads(fh.read())
+        fh.close()
+except Exception as e:
+    raise err
 
 # Application definition
 
@@ -47,6 +58,7 @@ LOCAL_APPS = [
 EXT_APPS = [
     'rest_framework',
     'oauth2_provider',
+    'corsheaders',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + EXT_APPS
@@ -60,6 +72,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 REST_FRAMEWORK = {
@@ -85,6 +98,8 @@ TEMPLATES = [
     },
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
@@ -98,6 +113,21 @@ DATABASES = {
     }
 }
 
+# Email Config
+# See: https://docs.djangoproject.com/en/dev/topics/email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST_USER = KEYS.get('EMAIL_HOST')
+
+EMAIL_HOST_PASSWORD = KEYS.get('EMAIL_PASSWORD')
+
+EMAIL_HOST = 'smtp.gmail.com'
+
+EMAIL_PORT = 587
+
+EMAIL_USE_TLS = True
+
+DEFAULT_FROM_EMAIL  = KEYS.get('EMAIL_HOST')
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators

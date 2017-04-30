@@ -1,1 +1,4 @@
-{}
+{
+	"EMAIL_HOST" : "example@example.com",
+	"EMAIL_PASSWORD" : "<enter your password>"
+}
