@@ -1,20 +1,20 @@
 # silicon_robot
 
-###### Description
+## Description
 An application consist of the following endpoints: get current users, login, signup, email activation , change password.
 
-###### Requirements
+## Requirements
 Copy `keys.json.example` in the `config/` folder of the app and rename it as `keys.json`. Fillup and replace the 
 following fields with the appropriate data.
 
-###### Run
+## Run
 Run the following commands to install dependencies.
 ```
 pip install -r requirements.txt
 python manage.py migrate --settings=config.settings
 python manage.py runserver --settings=config.settings
 ```
-###### Endpoints
+## Endpoints
 __user List__
 `/api/v1/users/`
 __signup__
