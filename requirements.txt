@@ -1,0 +1,14 @@
+django~=1.9
+djangorestframework
+djangorestframework-oauth
+
+django-cors-middleware
+
+django-oauth-toolkit
+django-oauth-plus
+django-oauth2-provider
+oauth2
+oauthlib
+
+flake8
+
