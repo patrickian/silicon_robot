@@ -4,7 +4,11 @@ from django.contrib.auth.models import User
 from config import settings
 
 
-def send_activation_mail(user):
+def send_activation_mail(token):
+    activation_link = ('http://localhost:8000/' +
+        'api/users/{}/activate?temp={}'.format
+        (token.user.id, token.token)
+    )
     
     html_msg = '''
         <h1> Welcome {} </h1>
@@ -17,8 +21,8 @@ def send_activation_mail(user):
         <br>
         Developer
     '''.format(
-        user.first_name or user.username,
-        'http://localhost:8000/api/users/{}/activate'.format(user.id),
+        token.user.first_name or token.user.username,
+        activation_link
     )
 
     send_mail(
@@ -26,5 +30,5 @@ def send_activation_mail(user):
         message='',
         html_message=html_msg,
         from_email=settings.EMAIL_HOST_USER,
-        recipient_list=[user.email],
+        recipient_list=[token.user.email],
         fail_silently=False)

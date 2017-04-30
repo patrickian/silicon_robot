@@ -129,6 +129,19 @@ EMAIL_USE_TLS = True
 
 DEFAULT_FROM_EMAIL  = KEYS.get('EMAIL_HOST')
 
+# OAUTH2
+# http://django-oauth-toolkit.readthedocs.io/en/latest/settings.html
+OAUTH2_PROVIDER = {
+    'SCOPES': {
+        'read': 'Read scope',
+        'write': 'Write scope',
+    },
+
+    'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 240000,
+
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 
