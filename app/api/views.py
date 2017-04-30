@@ -1,9 +1,6 @@
-import requests
-from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.core import serializers
-from django.utils import timezone
 
 from rest_framework import permissions, status
 from rest_framework.response import Response
@@ -11,60 +8,16 @@ from rest_framework.decorators import detail_route, list_route
 from rest_framework.viewsets import (
     ModelViewSet as model_set
 )
-from oauthlib.common import generate_token
-from oauth2_provider.models import AccessToken, Application
+
 from config.utils.send_mail import send_activation_mail
+from config.utils.oauth_handler import OAuthHandler
+
 from api.serializers import (
     UserListSerializer,
     UserSignupSerializer,
     UserLoginSerializer,
 )
 
-
-class OAuthHandler:
-    def create_application(self, user):
-        return Application.objects.create(
-            user=user,
-            client_type='confidential',
-            authorization_grant_type='password',
-            name=user.username
-        )
-
-
-    def __create_expiration(self):
-        return timezone.now() + timezone.timedelta(days=1)
-
-    def create_token(self, app):
-        return AccessToken.objects.create(
-            user=app.user,
-            application=app,
-            expires=self.__create_expiration(),
-            token=generate_token()
-        )
-
-    def get_user_token(self, user, token=None):
-        token_obj = AccessToken.objects.get(user=user)
-        if token:
-            return token_obj if token == token_obj.token else None
-        else:
-            return token_obj
-
-
-    def validate_token(self, token):
-        return (
-            True if token.expires > timezone.now()
-            else False
-        )
-
-    def refresh_token(self, user):
-        token = self.get_user_token(user)
-
-        if not self.validate_token(token):
-            token.token = generate_token()
-            token.expires = self.__create_expiration()
-            token.save()
-        return token
-        
 
 class UserViewSet(OAuthHandler, model_set):
     
