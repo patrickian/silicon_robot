@@ -15,13 +15,13 @@ python manage.py migrate --settings=config.settings
 python manage.py runserver --settings=config.settings
 ```
 ## Endpoints
-__user List__
-`/api/v1/users/`
-__signup__
-`/api/v1/users/user_signup/`
-__activate__
-`/api/v1/users/{pk}/activate/`
-__login__
-`/api/v1/users/user_login/`
-__change password__
+__user List__ </br>
+`/api/v1/users/`</br>
+__signup__</br>
+`/api/v1/users/user_signup/`</br>
+__activate__</br>
+`/api/v1/users/{pk}/activate/`</br>
+__login__</br>
+`/api/v1/users/user_login/`</br>
+__change password__</br>
 `/api/v1/users/change_password/`
