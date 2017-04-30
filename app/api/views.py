@@ -75,7 +75,7 @@ class UserViewSet(OAuthHandler, model_set):
     r_text = 'OK'
     r_status = status.HTTP_200_OK
 
-    @list_route(methods=['post'])
+    @list_route(methods=['post'], permission_classes=[permissions.AllowAny])
     def user_signup(self, request):
         serializer = UserSignupSerializer(data=request.data)
         if serializer.is_valid():
@@ -135,7 +135,7 @@ class UserViewSet(OAuthHandler, model_set):
 
         return Response(r_text, status=r_status)
 
-    @detail_route(methods=['get'])
+    @detail_route(methods=['get'], permission_classes=[permissions.AllowAny])
     def activate(self, request, pk=None):
         token = request.query_params.get('temp')
         user = User.objects.get(id=pk)
