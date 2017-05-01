@@ -16,12 +16,12 @@ python manage.py runserver --settings=config.settings
 ```
 ## Endpoints
 __user List__ </br>
-`/api/v1/users/`</br>
+`/api/v1/users/lists/`</br>
 __signup__</br>
-`/api/v1/users/user_signup/`</br>
+`/api/v1/users/signup/`</br>
 __activate__</br>
 `/api/v1/users/{pk}/activate/`</br>
 __login__</br>
-`/api/v1/users/user_login/`</br>
+`/api/v1/users/login/`</br>
 __change password__</br>
 `/api/v1/users/change_password/`
