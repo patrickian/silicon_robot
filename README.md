@@ -16,7 +16,7 @@ python manage.py runserver --settings=config.settings
 ```
 ## Endpoints
 __user List__ </br>
-`/api/v1/users/lists/`</br>
+`/api/v1/users/`</br>
 __signup__</br>
 `/api/v1/users/signup/`</br>
 __activate__</br>
