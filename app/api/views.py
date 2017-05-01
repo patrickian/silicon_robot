@@ -6,36 +6,37 @@ from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.viewsets import (
-    ModelViewSet as model_set
+    GenericViewSet as generic_set
 )
 
 from config.utils.send_mail import send_activation_mail
 from config.utils.oauth_handler import OAuthHandler
+from oauth2_provider.ext.rest_framework import OAuth2Authentication
 
 from api.serializers import (
     UserListSerializer,
+    UnauthenticatedUserListSerializer,
     UserSignupSerializer,
     UserLoginSerializer,
 )
 
 
-class UserViewSet(OAuthHandler, model_set):
+class UserViewSet(OAuthHandler, generic_set):
     '''
         HANDLER for User functions,
         Inherits OAuthHandler for Auth functions
-
-        ENDPOINT : /api/users/
     '''
     queryset = User.objects.all()
     serializer_class = UserListSerializer
+    authenication_classes = [OAuth2Authentication]
 
     # FOR RESPONSE MESSAGES AND STATUS
     r_text = 'OK'
     r_status = status.HTTP_200_OK
 
     @list_route(methods=['post'], permission_classes=[permissions.AllowAny])
-    def user_signup(self, request):
-        ''' ENDPOINT : /api/users/user_signup/
+    def signup(self, request):
+        ''' ENDPOINT : /api/users/signup/
         '''
         serializer = UserSignupSerializer(data=request.data)
         if serializer.is_valid():
@@ -53,9 +54,9 @@ class UserViewSet(OAuthHandler, model_set):
 
         return Response(r_text, status=r_status)
 
-    @list_route(methods=['post'])
-    def user_login(self, request):
-        ''' ENDPOINT : /api/users/user_login/
+    @list_route(methods=['post'], permission_classes=[permissions.AllowAny])
+    def login(self, request):
+        ''' ENDPOINT : /api/users/login/
         '''
         serializer = UserLoginSerializer(data=request.data)
         if serializer.is_valid():
@@ -77,7 +78,10 @@ class UserViewSet(OAuthHandler, model_set):
 
         return Response(r_text, status=r_status)
 
-    @list_route(methods=['patch'])
+    @list_route(
+        methods=['patch'],
+        permission_classes=[permissions.IsAuthenticated]
+    )
     def change_password(self, request):
         ''' ENDPOINT : /api/users/change_password/
         '''
@@ -112,4 +116,18 @@ class UserViewSet(OAuthHandler, model_set):
             r_text = 'Token Expired/ Wrong Token.'
             r_status = status.HTTP_401_UNAUTHORIZED
 
+        return Response(r_text, status=r_status)
+
+    @list_route(methods=['get'], permission_classes=[permissions.AllowAny])
+    def lists(self, request):
+        '''
+            ENDPOINT : /api/users/lists/
+        '''
+        if request.auth:
+            r_text = self.get_serializer(self.queryset, many=True).data
+        else:
+            r_text = UnauthenticatedUserListSerializer(
+                self.queryset, many=True).data
+
+        r_status = status.HTTP_200_OK
         return Response(r_text, status=r_status)
